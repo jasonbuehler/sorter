@@ -22,7 +22,7 @@ class ListsController < ApplicationController
       when :generate
         lis = []
         20.times do |i|
-          lis << {number: i}
+          lis << {number: rand(20)}
         end
         l = List.create list_items_attributes: lis
 
