@@ -1,0 +1,39 @@
+<script type="text/javascript">
+$(function() {
+    list = [];
+    $("#generate_link").bind('ajax:success', function(evt, data, status, xhr) {
+        if(list.length != 0) {
+            $("#lists").prepend("[" + list.join(", ") + "]<br>");
+        }
+        $("#list_container").html(data.join(", "));
+        list = data;
+    }).bind('ajax:error', function(evt, data) {
+    });
+
+    $("#sort_link").on('click', function() {
+        d = {};
+        $.ajax({
+            type: "POST",
+            url: "/lists/sort",
+            data: {"list": list},
+            success: function(data) {
+                $("#list_container").html(data.join(", "));
+                list = data;
+            }
+        });
+    });
+
+});
+</script>
+
+<h1>Lists</h1>
+
+Generate list: <%= link_to "Generate", '/lists/generate', remote: true, id: :generate_link %>
+<br>Sort list: <%= link_to "Sort", 'javascript:void(0)', id: :sort_link %>
+
+<div id="list_container"></div>
+<p id="lists">
+<% @ls.each do |list| %>
+    <%= list.list_items.map(&:number) %><br>
+<% end %>
+</p>
